@@ -1,4 +1,6 @@
 const fs = require("fs");
+import * as readline from "readline";
+
 // fs.promises
 // implement data typing
 let result = [];
@@ -43,18 +45,102 @@ for (let i = 1; i < data_array.length - 1; i++) {
   }
   result.push(data_obj);
 }
-//result.slice(2, 4);
-// filter result
-//var sortedRes = result.filter();
-console.log(result[0].Sample);
 
-// const newRes = (...arrCsv) => {
-//   delete arrCsv["Sample"];
-// };
+//transform array
+//for deletin object in array.
+// for(let i = 0; i<result.length;i++)
+// {
+//   if('LSL' in result[i]){
+//     delete result[i]['LSL'];
+//   }
+//   if('USL' in result[i]){
+//     delete result[i]['USL'];
+//   }
+// }
+interface DatabaseObject {
+  ProcessedOn?: Date;
+  PartNumber: string;
+  PressingNumber: string;
+  MeasuredValue01: string;
+  MeasuredValue02: string;
+  Criteria: string;
+  MaterialName?: string;
+  ResourceName?: string;
+  OperationName?: string;
+}
 
-// console.log(newRes(result));
-//req input from user
+//rather than deleting why not copying to new arr
+const arr: DatabaseObject[] = [];
 
-//let json = JSON.stringify(result);
+for (let i = 0; i < result.length; i++) {
+  const transformedObj: DatabaseObject = {
+    ProcessedOn: new Date(),
+    PartNumber: result[i]["Part No"],
+    PressingNumber: result[i]["Lot No"],
+    MeasuredValue01: result[i]["Measuring point"],
+    MeasuredValue02: result[i]["Measuring value"],
+    Criteria: result[i]["Criterion internal"],
+    MaterialName: getMaterialName(),
+    ResourceName: getOperationName(),
+    OperationName: getResourceName(),
+  };
+  arr.push(transformedObj);
+}
+console.log(arr);
 
-//fs.writeFileSync("files/output.json", json);
+function getMaterialName(): string {
+  const ql = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  ql.question("Material Name:", function (matname: string) {
+    return matname; // do somthing with result
+  });
+
+  return "gg";
+}
+
+function getOperationName(): string {
+  return "ayam";
+}
+
+function getResourceName(): string {
+  return "ayam";
+}
+
+//output to json file
+// let json = JSON.stringify(arr);
+// fs.writeFileSync("files/output.json", json);
+
+//NOTE q2
+
+const q2 = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+q2.question("ResourceName", function (resname: string) {
+  console.log(`Oh, so your Resource is ${resname}`); // do somthing with result
+});
+
+const q3 = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+q3.question(
+  "Operation Name n 1.TrackIn 2.TrackOut 3.Rework",
+  function (opname: string) {
+    console.log(`Oh, so your Operation is ${opname}`); // do somthing with result
+    switch (opname) {
+      case "1":
+      //DatabaseObject.OperationName = opname;
+    }
+  }
+);
+
+//TODO display result in console.
+
+//TODO Skip the line if “Result” column value is ‘False’
+
+//TODO Exception handling for avoiding unexpected errors

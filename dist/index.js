@@ -1,4 +1,30 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
+const readline = __importStar(require("readline"));
 // fs.promises
 // implement data typing
 let result = [];
@@ -42,15 +68,63 @@ for (let i = 1; i < data_array.length - 1; i++) {
     }
     result.push(data_obj);
 }
-//result.slice(2, 4);
-// filter result
-//var sortedRes = result.filter();
-const newRes = (...arrCsv) => {
-    delete arrCsv["Sample"];
-};
-let result2 = newRes(result);
-console.log(result2);
+//rather than deleting why not copying to new arr
+const arr = [];
+for (let i = 0; i < result.length; i++) {
+    const transformedObj = {
+        ProcessedOn: new Date(),
+        PartNumber: result[i]["Part No"],
+        PressingNumber: result[i]["Lot No"],
+        MeasuredValue01: result[i]["Measuring point"],
+        MeasuredValue02: result[i]["Measuring value"],
+        Criteria: result[i]["Criterion internal"],
+        MaterialName: getMaterialName(),
+        ResourceName: getOperationName(),
+        OperationName: getResourceName(),
+    };
+    arr.push(transformedObj);
+}
+console.log(arr);
+function getMaterialName() {
+    const ql = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
+    ql.question("Material Name:", function (matname) {
+        return matname; // do somthing with result
+    });
+    return "gg";
+}
+function getOperationName() {
+    return "ayam";
+}
+function getResourceName() {
+    return "ayam";
+}
+// console.log(newRes(result));
 //req input from user
-//let json = JSON.stringify(result);
-//fs.writeFileSync("files/output.json", json);
+let json = JSON.stringify(arr);
+fs.writeFileSync("files/output.json", json);
+//NOTE q2
+const q2 = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+q2.question("ResourceName", function (resname) {
+    console.log(`Oh, so your Resource is ${resname}`); // do somthing with result
+});
+const q3 = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+q3.question("Operation Name n 1.TrackIn 2.TrackOut 3.Rework", function (opname) {
+    console.log(`Oh, so your Operation is ${opname}`); // do somthing with result
+    switch (opname) {
+        case "1":
+        //DatabaseObject.OperationName = opname;
+    }
+});
+//TODO display result in console.
+//TODO Skip the line if “Result” column value is ‘False’
+//TODO Exception handling for avoiding unexpected errors
 //# sourceMappingURL=index.js.map
